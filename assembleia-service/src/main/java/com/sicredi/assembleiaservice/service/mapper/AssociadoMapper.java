@@ -1,14 +1,14 @@
 package com.sicredi.assembleiaservice.service.mapper;
 
-import com.sicredi.assembleiaservice.dto.AssociadoDTO;
-import com.sicredi.assembleiaservice.dto.AssociadoEdicaoDTO;
+import com.sicredi.assembleiaservice.dto.AssociadoResponseDTO;
+import com.sicredi.assembleiaservice.dto.SalvarAssociadoRequestDTO;
 import com.sicredi.assembleiaservice.model.Associado;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AssociadoMapper {
 
-    public Associado toEntity(AssociadoEdicaoDTO dto){
+    public Associado toEntity(SalvarAssociadoRequestDTO dto){
 
         return Associado.builder()
                 .nome(dto.nome())
@@ -16,9 +16,9 @@ public class AssociadoMapper {
                 .cpf(dto.cpf()).build();
     }
 
-    public AssociadoDTO toDTO(Associado entity){
+    public AssociadoResponseDTO toDTO(Associado entity){
 
-        return new AssociadoDTO(
+        return new AssociadoResponseDTO(
                 entity.getId(),
                 entity.getNome(),
                 entity.getDataNascimento(),

@@ -6,7 +6,7 @@ import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDate;
 
-public record AssociadoEdicaoDTO(
+public record SalvarAssociadoRequestDTO(
         @NotNull
         String nome,
 

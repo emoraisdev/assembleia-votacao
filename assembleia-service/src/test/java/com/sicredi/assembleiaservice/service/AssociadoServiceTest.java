@@ -1,7 +1,7 @@
 package com.sicredi.assembleiaservice.service;
 
-import com.sicredi.assembleiaservice.dto.AssociadoDTO;
-import com.sicredi.assembleiaservice.dto.AssociadoEdicaoDTO;
+import com.sicredi.assembleiaservice.dto.AssociadoResponseDTO;
+import com.sicredi.assembleiaservice.dto.SalvarAssociadoRequestDTO;
 import com.sicredi.assembleiaservice.exception.EntityNotFoundException;
 import com.sicredi.assembleiaservice.exception.ParameterNotFoundException;
 import com.sicredi.assembleiaservice.model.Associado;
@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -30,18 +31,21 @@ public class AssociadoServiceTest {
     @Mock
     private AssociadoMapper associadoMapper;
 
+    @Mock
+    private ApplicationEventPublisher eventPublisher;
+
     @InjectMocks
     private AssociadoService associadoService;
 
-    private AssociadoEdicaoDTO associadoEdicaoDTO;
+    private SalvarAssociadoRequestDTO associadoRequestDTO;
     private Associado associado;
-    private AssociadoDTO associadoDTO;
+    private AssociadoResponseDTO associadoDTO;
     private final Long ID_VALIDO = 1L;
     private final Long ID_INVALIDO = 999L;
 
     @BeforeEach
     void setUp() {
-        associadoEdicaoDTO = new AssociadoEdicaoDTO(
+        associadoRequestDTO = new SalvarAssociadoRequestDTO(
                 "Pedro",
                 LocalDate.of(2000,10,15),
                 "47556317005"
@@ -52,7 +56,7 @@ public class AssociadoServiceTest {
         associado.setNome("Pedro");
         associado.setCpf("47556317005");
 
-        associadoDTO = new AssociadoDTO(
+        associadoDTO = new AssociadoResponseDTO(
                 ID_VALIDO,
                 "Pedro",
                 LocalDate.of(2000,10,15),
@@ -63,17 +67,17 @@ public class AssociadoServiceTest {
     @Test
     @DisplayName("Deve incluir um novo associado com sucesso")
     void incluir_deveRetornarAssociadoDTO_quandoSucesso() {
-        when(associadoMapper.toEntity(associadoEdicaoDTO)).thenReturn(associado);
+        when(associadoMapper.toEntity(associadoRequestDTO)).thenReturn(associado);
         when(associadoRepository.save(associado)).thenReturn(associado);
         when(associadoMapper.toDTO(associado)).thenReturn(associadoDTO);
 
-        AssociadoDTO resultado = associadoService.incluir(associadoEdicaoDTO);
+        AssociadoResponseDTO resultado = associadoService.incluir(associadoRequestDTO);
 
         assertNotNull(resultado);
         assertEquals(ID_VALIDO, resultado.id());
         assertEquals("Pedro", resultado.nome());
 
-        verify(associadoMapper).toEntity(associadoEdicaoDTO);
+        verify(associadoMapper).toEntity(associadoRequestDTO);
         verify(associadoRepository).save(associado);
         verify(associadoMapper).toDTO(associado);
     }
@@ -84,7 +88,7 @@ public class AssociadoServiceTest {
         when(associadoRepository.findById(ID_VALIDO)).thenReturn(Optional.of(associado));
         when(associadoMapper.toDTO(associado)).thenReturn(associadoDTO);
 
-        AssociadoDTO resultado = associadoService.buscar(ID_VALIDO);
+        AssociadoResponseDTO resultado = associadoService.buscar(ID_VALIDO);
 
         assertNotNull(resultado);
         assertEquals(ID_VALIDO, resultado.id());
@@ -126,7 +130,7 @@ public class AssociadoServiceTest {
         var novoNome = "Pedro Souza";
         var cpf = "47556317005";
 
-        var associadoEdicaoDTO = new AssociadoEdicaoDTO(
+        var associadoEdicaoDTO = new SalvarAssociadoRequestDTO(
                 novoNome,
                 novaDataNascimento,
                 cpf
@@ -138,7 +142,7 @@ public class AssociadoServiceTest {
                 .dataNascimento(novaDataNascimento)
                 .cpf(cpf).build();
 
-        var associadoRetornoDTO = new AssociadoDTO(
+        var associadoRetornoDTO = new AssociadoResponseDTO(
                 ID_VALIDO,
                 novoNome,
                 novaDataNascimento,
@@ -149,7 +153,7 @@ public class AssociadoServiceTest {
         when(associadoRepository.save(associadoAtualizado)).thenReturn(associadoAtualizado);
         when(associadoMapper.toDTO(associadoAtualizado)).thenReturn(associadoRetornoDTO);
 
-        AssociadoDTO resultado = associadoService.alterar(ID_VALIDO, associadoEdicaoDTO);
+        AssociadoResponseDTO resultado = associadoService.alterar(ID_VALIDO, associadoEdicaoDTO);
 
         assertNotNull(resultado);
         assertEquals(ID_VALIDO, resultado.id());
@@ -165,7 +169,7 @@ public class AssociadoServiceTest {
     @DisplayName("Deve lançar exceção ao alterar com ID nulo")
     void alterar_deveLancarExcecao_quandoIdNulo() {
         assertThrows(ParameterNotFoundException.class,
-                () -> associadoService.alterar(null, associadoEdicaoDTO),
+                () -> associadoService.alterar(null, associadoRequestDTO),
                 "Deveria lançar ParameterNotFoundException para ID nulo"
         );
 

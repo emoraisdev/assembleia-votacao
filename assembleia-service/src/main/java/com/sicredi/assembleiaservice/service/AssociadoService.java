@@ -1,31 +1,56 @@
 package com.sicredi.assembleiaservice.service;
 
-import com.sicredi.assembleiaservice.dto.AssociadoDTO;
-import com.sicredi.assembleiaservice.dto.AssociadoEdicaoDTO;
+import com.sicredi.assembleiaservice.dto.AssociadoResponseDTO;
+import com.sicredi.assembleiaservice.dto.SalvarAssociadoRequestDTO;
 import com.sicredi.assembleiaservice.exception.EntityNotFoundException;
 import com.sicredi.assembleiaservice.exception.ParameterNotFoundException;
 import com.sicredi.assembleiaservice.model.Associado;
 import com.sicredi.assembleiaservice.repository.AssociadoRepository;
 import com.sicredi.assembleiaservice.service.mapper.AssociadoMapper;
+import com.sicredi.assembleiaservice.service.producer.event.AssociadoAtualizacaoEvent;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AssociadoService {
 
     private final AssociadoRepository repo;
-
     private final AssociadoMapper mapper;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public AssociadoDTO incluir(AssociadoEdicaoDTO associadoDTO) {
+    @Value("${spring.application.name}")
+    private String applicationName;
 
-        var associado = mapper.toEntity(associadoDTO);
+    public AssociadoResponseDTO incluir(SalvarAssociadoRequestDTO associadoDTO) {
 
-        return mapper.toDTO(repo.save(associado));
+        var novoAssociado = mapper.toEntity(associadoDTO);
+
+        repo.save(novoAssociado);
+
+        publicarAtualizacao(novoAssociado);
+
+        return mapper.toDTO(novoAssociado);
     }
 
-    public AssociadoDTO buscar(Long id) {
+    private void publicarAtualizacao(Associado novoAssociado) {
+        eventPublisher.publishEvent(
+                new AssociadoAtualizacaoEvent(
+                        novoAssociado.getId(),
+                        novoAssociado.getNome(),
+                        LocalDateTime.now(),
+                        applicationName
+                )
+        );
+    }
+
+    public AssociadoResponseDTO buscar(Long id) {
 
         if (id == null) {
             throw new ParameterNotFoundException("id");
@@ -37,7 +62,7 @@ public class AssociadoService {
         return mapper.toDTO(associado);
     }
 
-    public AssociadoDTO alterar(Long id, AssociadoEdicaoDTO associadoDTO){
+    public AssociadoResponseDTO alterar(Long id, SalvarAssociadoRequestDTO associadoDTO){
 
         if (id == null) {
             throw new ParameterNotFoundException("id");
@@ -50,6 +75,10 @@ public class AssociadoService {
         entidadeExistente.setNome(associadoDTO.nome());
         entidadeExistente.setDataNascimento(associadoDTO.dataNascimento());
 
-        return mapper.toDTO(repo.save(entidadeExistente));
+        var associadoAlterado = repo.save(entidadeExistente);
+
+        publicarAtualizacao(associadoAlterado);
+
+        return mapper.toDTO(associadoAlterado);
     }
 }

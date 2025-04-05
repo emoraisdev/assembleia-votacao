@@ -1,11 +1,8 @@
 package com.sicredi.assembleiaservice.dto;
 
-import jakarta.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.br.CPF;
-
 import java.time.LocalDate;
 
-public record AssociadoDTO(
+public record AssociadoResponseDTO(
         Long id,
         String nome,
         LocalDate dataNascimento,
