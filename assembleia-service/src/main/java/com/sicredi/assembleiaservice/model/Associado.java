@@ -23,7 +23,6 @@ public class Associado {
     @Column(nullable = false)
     private String nome;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
     @Column(nullable = false)
     private LocalDate dataNascimento;
 
