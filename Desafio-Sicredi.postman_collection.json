@@ -140,7 +140,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nome\" : \"João\",\r\n    \"dataNascimento\": \"03/04/2000\",\r\n    \"cpf\": \"1234156\"\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -209,7 +209,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nome\" : \"João\",\r\n    \"dataNascimento\": \"03/04/2000\",\r\n    \"cpf\": \"1234156\"\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -279,7 +279,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nome\" : \"João\",\r\n    \"dataNascimento\": \"03/04/2000\",\r\n    \"cpf\": \"1234156\"\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -348,7 +348,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"associadoId\" : 1,\r\n    \"opcao\": 1\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
