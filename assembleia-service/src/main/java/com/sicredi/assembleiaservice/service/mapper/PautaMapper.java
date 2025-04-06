@@ -1,14 +1,21 @@
 package com.sicredi.assembleiaservice.service.mapper;
 
 import com.sicredi.assembleiaservice.dto.PautaResponseDTO;
-import com.sicredi.assembleiaservice.dto.SalvarPautaRequestDTO;
+import com.sicredi.assembleiaservice.dto.PautaRequestDTO;
 import com.sicredi.assembleiaservice.model.Pauta;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.Optional;
+
 @Component
+@RequiredArgsConstructor
 public class PautaMapper {
 
-    public Pauta toEntity(SalvarPautaRequestDTO dto){
+    private final SessaoVotacaoMapper sessaoVotacaoMapper;
+
+    public Pauta toEntity(PautaRequestDTO dto){
 
         return Pauta.builder()
                 .titulo(dto.titulo())
@@ -20,7 +27,9 @@ public class PautaMapper {
         return new PautaResponseDTO(
                 pauta.getId(),
                 pauta.getTitulo(),
-                pauta.getDescricao()
+                pauta.getDescricao(),
+                Optional.ofNullable(pauta.getSessoesVotacao()).orElse(Collections.emptyList())
+                        .stream().map(sessaoVotacaoMapper::toDTO).toList()
         );
     }
 }

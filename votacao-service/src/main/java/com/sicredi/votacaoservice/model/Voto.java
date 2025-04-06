@@ -19,6 +19,8 @@ public class Voto {
 
     private Long associadoId;
 
+    private Long sessaoVotacaoId;
+
     private OpcaoVoto opcao;
 
     private LocalDateTime dataVoto;

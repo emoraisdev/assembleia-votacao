@@ -1,7 +1,7 @@
 package com.sicredi.assembleiaservice.controller.v1;
 
 import com.sicredi.assembleiaservice.dto.PautaResponseDTO;
-import com.sicredi.assembleiaservice.dto.SalvarPautaRequestDTO;
+import com.sicredi.assembleiaservice.dto.PautaRequestDTO;
 import com.sicredi.assembleiaservice.service.PautaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ public class PautaController {
     private final PautaService service;
 
     @PostMapping
-    public ResponseEntity<PautaResponseDTO> incluir(@RequestBody @Valid SalvarPautaRequestDTO pauta){
+    public ResponseEntity<PautaResponseDTO> incluir(@RequestBody @Valid PautaRequestDTO pauta){
 
         var pautaSalva = service.incluir(pauta);
 

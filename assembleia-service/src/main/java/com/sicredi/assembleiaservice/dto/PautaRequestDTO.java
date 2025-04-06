@@ -2,7 +2,7 @@ package com.sicredi.assembleiaservice.dto;
 
 import jakarta.validation.constraints.NotNull;
 
-public record SalvarPautaRequestDTO(
+public record PautaRequestDTO(
         @NotNull
         String titulo,
         @NotNull

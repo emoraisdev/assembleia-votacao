@@ -6,16 +6,13 @@ import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDate;
 
-public record SalvarAssociadoRequestDTO(
+public record EdicaoAssociadoRequestDTO(
         @NotNull
         String nome,
 
         @NotNull
         @JsonFormat(pattern = "dd/MM/yyyy")
-        LocalDate dataNascimento,
+        LocalDate dataNascimento
 
-        @CPF
-        @NotNull
-        String cpf
 ) {
 }

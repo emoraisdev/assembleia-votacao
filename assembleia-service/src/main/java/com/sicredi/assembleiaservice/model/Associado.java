@@ -28,4 +28,6 @@ public class Associado {
 
     @Column(nullable = false)
     private String cpf;
+
+    private boolean podeVotar;
 }

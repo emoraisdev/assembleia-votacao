@@ -1,9 +1,10 @@
 package com.sicredi.assembleiaservice.service;
 
 import com.sicredi.assembleiaservice.dto.PautaResponseDTO;
-import com.sicredi.assembleiaservice.dto.SalvarPautaRequestDTO;
+import com.sicredi.assembleiaservice.dto.PautaRequestDTO;
 import com.sicredi.assembleiaservice.exception.EntityNotFoundException;
 import com.sicredi.assembleiaservice.exception.ParameterNotFoundException;
+import com.sicredi.assembleiaservice.model.Pauta;
 import com.sicredi.assembleiaservice.repository.PautaRepository;
 import com.sicredi.assembleiaservice.service.mapper.PautaMapper;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ public class PautaService {
     private final PautaRepository repo;
     private final PautaMapper mapper;
 
-    public PautaResponseDTO incluir(SalvarPautaRequestDTO pautaRequest) {
+    public PautaResponseDTO incluir(PautaRequestDTO pautaRequest) {
 
         var pauta = mapper.toEntity(pautaRequest);
 
@@ -29,9 +30,17 @@ public class PautaService {
             throw new ParameterNotFoundException("id");
         }
 
-        var pauta = repo.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Pauta"));
+        var pauta = buscarEntidade(id);
 
         return mapper.toDTO(pauta);
+    }
+
+    public Pauta buscarEntidade(Long id) {
+
+        if (id == null) {
+            throw new ParameterNotFoundException("id");
+        }
+
+        return repo.findById(id).orElseThrow(() -> new EntityNotFoundException("Pauta"));
     }
 }

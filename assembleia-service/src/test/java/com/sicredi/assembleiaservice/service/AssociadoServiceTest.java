@@ -1,7 +1,8 @@
 package com.sicredi.assembleiaservice.service;
 
 import com.sicredi.assembleiaservice.dto.AssociadoResponseDTO;
-import com.sicredi.assembleiaservice.dto.SalvarAssociadoRequestDTO;
+import com.sicredi.assembleiaservice.dto.AssociadoRequestDTO;
+import com.sicredi.assembleiaservice.dto.EdicaoAssociadoRequestDTO;
 import com.sicredi.assembleiaservice.exception.EntityNotFoundException;
 import com.sicredi.assembleiaservice.exception.ParameterNotFoundException;
 import com.sicredi.assembleiaservice.model.Associado;
@@ -17,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,7 +39,7 @@ public class AssociadoServiceTest {
     @InjectMocks
     private AssociadoService associadoService;
 
-    private SalvarAssociadoRequestDTO associadoRequestDTO;
+    private AssociadoRequestDTO associadoRequestDTO;
     private Associado associado;
     private AssociadoResponseDTO associadoDTO;
     private final Long ID_VALIDO = 1L;
@@ -45,7 +47,7 @@ public class AssociadoServiceTest {
 
     @BeforeEach
     void setUp() {
-        associadoRequestDTO = new SalvarAssociadoRequestDTO(
+        associadoRequestDTO = new AssociadoRequestDTO(
                 "Pedro",
                 LocalDate.of(2000,10,15),
                 "47556317005"
@@ -60,6 +62,7 @@ public class AssociadoServiceTest {
                 ID_VALIDO,
                 "Pedro",
                 LocalDate.of(2000,10,15),
+                true,
                 "47556317005"
         );
     }
@@ -130,10 +133,9 @@ public class AssociadoServiceTest {
         var novoNome = "Pedro Souza";
         var cpf = "47556317005";
 
-        var associadoEdicaoDTO = new SalvarAssociadoRequestDTO(
+        var associadoEdicaoDTO = new EdicaoAssociadoRequestDTO(
                 novoNome,
-                novaDataNascimento,
-                cpf
+                novaDataNascimento
         );
 
         var associadoAtualizado = Associado.builder()
@@ -146,6 +148,7 @@ public class AssociadoServiceTest {
                 ID_VALIDO,
                 novoNome,
                 novaDataNascimento,
+                true,
                 cpf
         );
 
@@ -169,7 +172,10 @@ public class AssociadoServiceTest {
     @DisplayName("Deve lançar exceção ao alterar com ID nulo")
     void alterar_deveLancarExcecao_quandoIdNulo() {
         assertThrows(ParameterNotFoundException.class,
-                () -> associadoService.alterar(null, associadoRequestDTO),
+                () -> associadoService.alterar(null, new EdicaoAssociadoRequestDTO(
+                        "",
+                        LocalDate.now()
+                )),
                 "Deveria lançar ParameterNotFoundException para ID nulo"
         );
 

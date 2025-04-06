@@ -50,6 +50,14 @@ public class ControllerExceptionHandler {
                         request.getRequestURI()));
     }
 
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<StandardError> businessException(BusinessException erro, HttpServletRequest request){
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST.value())
+                .body(getStandardError(HttpStatus.BAD_REQUEST.value(), "Erro de Validação",
+                        Collections.singletonList(erro.getMessage()), request.getRequestURI()));
+    }
+
     private StandardError getStandardError(Integer status, String tipoErro, List<String> mensagens, String uri){
 
         var erro = new StandardError();

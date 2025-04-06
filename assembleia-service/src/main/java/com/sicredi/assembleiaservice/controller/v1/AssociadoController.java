@@ -1,7 +1,8 @@
 package com.sicredi.assembleiaservice.controller.v1;
 
 import com.sicredi.assembleiaservice.dto.AssociadoResponseDTO;
-import com.sicredi.assembleiaservice.dto.SalvarAssociadoRequestDTO;
+import com.sicredi.assembleiaservice.dto.AssociadoRequestDTO;
+import com.sicredi.assembleiaservice.dto.EdicaoAssociadoRequestDTO;
 import com.sicredi.assembleiaservice.service.AssociadoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class AssociadoController {
     private final AssociadoService service;
 
     @PostMapping
-    public ResponseEntity<AssociadoResponseDTO> incluir(@RequestBody @Valid SalvarAssociadoRequestDTO associado){
+    public ResponseEntity<AssociadoResponseDTO> incluir(@RequestBody @Valid AssociadoRequestDTO associado){
 
         var associadoSalvo = service.incluir(associado);
 
@@ -32,7 +33,7 @@ public class AssociadoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> alterar(@Valid @RequestBody SalvarAssociadoRequestDTO associado, @PathVariable Long id) {
+    public ResponseEntity<Object> alterar(@Valid @RequestBody EdicaoAssociadoRequestDTO associado, @PathVariable Long id) {
 
         var associadoAlterado = service.alterar(id, associado);
         return new ResponseEntity<>(associadoAlterado, HttpStatus.ACCEPTED);

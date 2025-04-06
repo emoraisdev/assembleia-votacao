@@ -1,7 +1,7 @@
 package com.sicredi.assembleiaservice.service;
 
 import com.sicredi.assembleiaservice.dto.PautaResponseDTO;
-import com.sicredi.assembleiaservice.dto.SalvarPautaRequestDTO;
+import com.sicredi.assembleiaservice.dto.PautaRequestDTO;
 import com.sicredi.assembleiaservice.exception.EntityNotFoundException;
 import com.sicredi.assembleiaservice.exception.ParameterNotFoundException;
 import com.sicredi.assembleiaservice.model.Pauta;
@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,7 +33,7 @@ public class PautaServiceTest {
     @InjectMocks
     private PautaService pautaService;
 
-    private SalvarPautaRequestDTO pautaRequestDTO;
+    private PautaRequestDTO pautaRequestDTO;
     private Pauta pauta;
     private PautaResponseDTO pautaDTO;
     private final Long ID_VALIDO = 1L;
@@ -40,7 +41,7 @@ public class PautaServiceTest {
 
     @BeforeEach
     void setUp() {
-        pautaRequestDTO = new SalvarPautaRequestDTO(
+        pautaRequestDTO = new PautaRequestDTO(
                 "Pauta de Teste",
                 "Esta é uma pauta de teste"
         );
@@ -53,7 +54,8 @@ public class PautaServiceTest {
         pautaDTO = new PautaResponseDTO(
                 ID_VALIDO,
                 "Pauta de Teste",
-                "Esta é uma pauta de teste"
+                "Esta é uma pauta de teste",
+                new ArrayList<>()
         );
     }
 

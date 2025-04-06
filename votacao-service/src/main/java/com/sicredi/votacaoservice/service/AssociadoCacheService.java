@@ -1,5 +1,6 @@
 package com.sicredi.votacaoservice.service;
 
+import com.sicredi.votacaoservice.exception.EntityNotFoundException;
 import com.sicredi.votacaoservice.model.AssociadoCache;
 import com.sicredi.votacaoservice.repository.AssociadoCacheRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,9 +39,19 @@ public class AssociadoCacheService {
      * Atualiza o cache com os dados do Associado.
      */
     private Mono<AssociadoCache> atualizarCache(AssociadoCache existente, AssociadoCache associadoAtualizado) {
+
+        existente.setPodeVotar(associadoAtualizado.isPodeVotar());
         existente.setDataAtualizacao(associadoAtualizado.getDataAtualizacao());
         existente.setVersaoDados(existente.getVersaoDados() + 1);
 
         return repo.save(existente);
+    }
+
+    public Mono<AssociadoCache> buscarPorAssociadoId(Long associadoId){
+
+        return repo.findByAssociadoId(associadoId)
+                .switchIfEmpty(Mono.error(
+                        new EntityNotFoundException("Associado")
+                ));
     }
 }
